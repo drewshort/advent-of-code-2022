@@ -56,7 +56,7 @@ fn parse_elves(input_file_path: &str) -> Result<Vec<Elf>> {
                 Ok(line) => {
                     let trimmed_line = line.trim();
                     // Record the totals for an elf when encountering a newline
-                    if trimmed_line.len() < 1 {
+                    if trimmed_line.is_empty() {
                         elves.push(Elf {
                             id: current_elf_id,
                             calories: current_elf_calories,
@@ -99,7 +99,6 @@ fn main() -> Result<()> {
     elves.sort_by(|a, b| b.calories.cmp(&a.calories));
 
     let top_3_elves = &elves[0..3];
-    // println!("{:?}", top_3_elves);
     println!(
         "{} Calories carried by elf {}",
         top_3_elves[0].calories, top_3_elves[0].id
