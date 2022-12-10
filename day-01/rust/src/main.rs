@@ -75,22 +75,14 @@ fn main() -> Result<()> {
         return Err(Box::new(RuntimeError{message: String::from("Must provide input file path")}));
     }
     let input_path = &args[1];
-    let elves = parse_elves(input_path)?;
+    let mut elves = parse_elves(input_path)?;
+    // Sort in reversed direction b > a to get descending values
+    elves.sort_by(|a, b| b.calories.cmp(&a.calories));
 
-    let mut elf_with_most_calories: Option<Elf> = None;
-    for elf in elves {
-        match elf_with_most_calories {
-            None => {
-                elf_with_most_calories = Some(elf);
-                continue;
-            },
-            Some(_) => ()
-        }
-        if elf.calories > elf_with_most_calories.unwrap().calories {
-            elf_with_most_calories = Some(elf);
-        }
-    }
+    let top_3_elves = &elves[0..3];
+    // println!("{:?}", top_3_elves);
+    println!("{} Calories carried by elf {}", top_3_elves[0].calories, top_3_elves[0].id);
+    println!("{} Calories carried by the top 3 elves", top_3_elves.iter().map(|&elf| elf.calories).sum::<u32>());
 
-    println!("{:?}", elf_with_most_calories.unwrap());
     Ok(())
 }
