@@ -44,6 +44,7 @@ fn parse_elves(input_file_path: &str) -> Result<Vec<Elf>> {
             match line {
                 Ok(line) => {
                     let trimmed_line = line.trim();
+                    // Record the totals for an elf when encountering a newline
                     if trimmed_line.len() < 1 {
                         elves.push(Elf{id: current_elf_id, calories: current_elf_calories});
                         current_elf_id += 1;
