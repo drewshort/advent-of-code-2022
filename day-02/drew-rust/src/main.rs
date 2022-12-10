@@ -33,7 +33,7 @@ enum PlayerMove {
 
 impl FromStr for PlayerMove {
     type Err = ();
-    fn from_str(input: &str) -> std::result::Result<PlayerMove, Self::Err> {
+    fn from_str(input: &str) -> std::result::Result<Self, Self::Err> {
         match input {
             "A" => Ok(PlayerMove::Rock),
             "B" => Ok(PlayerMove::Paper),
@@ -53,6 +53,18 @@ enum RoundResult {
     Win = 6,
 }
 
+impl FromStr for RoundResult {
+    type Err = ();
+    fn from_str(input: &str) -> std::result::Result<Self, Self::Err> {
+        match input {
+            "X" => Ok(RoundResult::Lose),
+            "Y" => Ok(RoundResult::Tie),
+            "Z" => Ok(RoundResult::Win),
+            _ => Err(()),
+        }
+    }
+}
+
 #[derive(Debug)]
 struct RoundScore {
     round: u32,
@@ -60,6 +72,8 @@ struct RoundScore {
     player_1_score: u32,
     player_2_move: PlayerMove,
     player_2_score: u32,
+    player_2_ideal_move: PlayerMove,
+    player_2_ideal_score: u32,
 }
 
 fn calculate_move_score(player_1_move: &PlayerMove, player_2_move: &PlayerMove) -> u32 {
@@ -78,6 +92,29 @@ fn calculate_move_score(player_1_move: &PlayerMove, player_2_move: &PlayerMove) 
             PlayerMove::Rock => PlayerMove::Scissors as u32 + RoundResult::Lose as u32,
             PlayerMove::Paper => PlayerMove::Scissors as u32 + RoundResult::Win as u32,
             PlayerMove::Scissors => PlayerMove::Scissors as u32 + RoundResult::Tie as u32,
+        },
+    }
+}
+
+fn calculate_ideal_move(
+    player_1_move: &PlayerMove,
+    player_2_ideal_result: &RoundResult,
+) -> PlayerMove {
+    match player_2_ideal_result {
+        RoundResult::Lose => match player_1_move {
+            PlayerMove::Rock => PlayerMove::Scissors,
+            PlayerMove::Paper => PlayerMove::Rock,
+            PlayerMove::Scissors => PlayerMove::Paper,
+        },
+        RoundResult::Tie => match player_1_move {
+            PlayerMove::Rock => PlayerMove::Rock,
+            PlayerMove::Paper => PlayerMove::Paper,
+            PlayerMove::Scissors => PlayerMove::Scissors,
+        },
+        RoundResult::Win => match player_1_move {
+            PlayerMove::Rock => PlayerMove::Paper,
+            PlayerMove::Paper => PlayerMove::Scissors,
+            PlayerMove::Scissors => PlayerMove::Rock,
         },
     }
 }
@@ -107,14 +144,23 @@ fn parse_game_rounds(input_file_path: &str) -> Result<Vec<RoundScore>> {
                     let line_parts: Vec<&str> = line.split_whitespace().collect();
                     let player_1_move = PlayerMove::from_str(line_parts[0]).unwrap();
                     let player_2_move = PlayerMove::from_str(line_parts[1]).unwrap();
+                    let player_2_ideal_result = RoundResult::from_str(line_parts[1]).unwrap();
+                    let player_2_ideal_move: PlayerMove =
+                        calculate_ideal_move(&player_1_move, &player_2_ideal_result);
+
                     let player_1_score = calculate_move_score(&player_1_move, &player_2_move);
                     let player_2_score = calculate_move_score(&player_2_move, &player_1_move);
+                    let player_2_ideal_score: u32 =
+                        calculate_move_score(&player_2_ideal_move, &player_1_move);
+
                     round_scores.push(RoundScore {
                         round: round_number,
                         player_1_move,
                         player_1_score,
                         player_2_move,
                         player_2_score,
+                        player_2_ideal_move,
+                        player_2_ideal_score,
                     });
                     round_number += 1;
                 }
@@ -146,14 +192,20 @@ fn main() -> Result<()> {
         .map(|round_score| round_score.player_2_score)
         .sum::<u32>();
 
+    let player_2_ideal_score_sum = round_scores
+        .iter()
+        .map(|round_score| round_score.player_2_ideal_score)
+        .sum::<u32>();
+
     // println!("{:#?}", round_scores);
 
     println!(
         r#"
 Player 1: {}
 Player 2: {}
+Player 2 Ideal Score: {}
 "#,
-        player_1_score_sum, player_2_score_sum
+        player_1_score_sum, player_2_score_sum, player_2_ideal_score_sum
     );
 
     Ok(())
