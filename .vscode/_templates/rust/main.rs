@@ -19,6 +19,14 @@ impl fmt::Display for RuntimeError {
 
 impl Error for RuntimeError {}
 
+fn read_lines<P>(file_path: P) -> io::Result<Lines<BufReader<File>>>
+where
+    P: AsRef<Path>,
+{
+    let file = File::open(file_path)?;
+    Ok(BufReader::new(file).lines())
+}
+
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
