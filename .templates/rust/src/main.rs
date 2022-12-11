@@ -3,29 +3,11 @@ Basic rust bin with runtime error and arg parsing
 */
 use std::{env, error::Error, fmt};
 
+use aoc_common_lib::error::RuntimeError;
+use aoc_common_lib::utility::read_lines;
+
 // Override the alias to use `Box<error::Error>`.
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
-
-#[derive(Debug, Clone)]
-struct RuntimeError {
-    message: String,
-}
-
-impl fmt::Display for RuntimeError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.message)
-    }
-}
-
-impl Error for RuntimeError {}
-
-fn read_lines<P>(file_path: P) -> io::Result<Lines<BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(file_path)?;
-    Ok(BufReader::new(file).lines())
-}
 
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();

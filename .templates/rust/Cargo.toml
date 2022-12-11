@@ -1,5 +1,5 @@
 [package]
-name = "advent-day-3"
+name = "advent-of-code-template"
 version = "0.1.0"
 edition = "2021"
 

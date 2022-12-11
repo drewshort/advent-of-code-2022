@@ -1,3 +1,10 @@
 [workspace]
 
-members = ["day-01/drew-rust", "day-02/drew-rust", "day-03/drew-rust"]
+members = [
+    ".templates/rust",
+    "lib/rust-aoc-common-lib",
+    "day-01/drew-rust",
+    "day-02/drew-rust",
+    "day-03/drew-rust",
+    "day-04/drew-rust",
+]

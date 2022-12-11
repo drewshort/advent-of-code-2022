@@ -1,27 +1,10 @@
-use std::{
-    env,
-    error::Error,
-    fmt,
-    fs::File,
-    io::{self, BufRead, BufReader, Lines},
-    path::Path,
-};
+use std::{env, error::Error, path::Path};
+
+use aoc_common_lib::error::RuntimeError;
+use aoc_common_lib::utility::read_lines;
 
 // Override the alias to use `Box<error::Error>`.
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
-
-#[derive(Debug, Clone)]
-struct RuntimeError {
-    message: String,
-}
-
-impl fmt::Display for RuntimeError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.message)
-    }
-}
-
-impl Error for RuntimeError {}
 
 #[derive(Debug, Clone, Copy)]
 struct Elf {
@@ -29,21 +12,11 @@ struct Elf {
     calories: u32,
 }
 
-fn read_lines<P>(file_path: P) -> io::Result<Lines<BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(file_path)?;
-    Ok(BufReader::new(file).lines())
-}
-
 fn parse_elves(input_file_path: &str) -> Result<Vec<Elf>> {
     let input_file = Path::new(input_file_path);
     if !input_file.exists() {
         let error_message = format!("Path {} does not appear to exist", input_file_path);
-        return Err(Box::new(RuntimeError {
-            message: error_message,
-        }));
+        return Err(Box::new(RuntimeError::new(error_message)));
     }
 
     let mut elves: Vec<Elf> = Vec::new();
@@ -89,9 +62,9 @@ fn parse_elves(input_file_path: &str) -> Result<Vec<Elf>> {
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
-        return Err(Box::new(RuntimeError {
-            message: String::from("Must provide input file path"),
-        }));
+        return Err(Box::new(RuntimeError::new(String::from(
+            "Must provide input file path",
+        ))));
     }
     let input_path = &args[1];
     let mut elves = parse_elves(input_path)?;

@@ -5,11 +5,35 @@ version = 3
 [[package]]
 name = "advent-day-1"
 version = "0.1.0"
+dependencies = [
+ "aoc-common-lib",
+]
 
 [[package]]
 name = "advent-day-2"
 version = "0.1.0"
+dependencies = [
+ "aoc-common-lib",
+]
 
 [[package]]
 name = "advent-day-3"
+version = "0.1.0"
+dependencies = [
+ "aoc-common-lib",
+]
+
+[[package]]
+name = "advent-day-4"
+version = "0.1.0"
+
+[[package]]
+name = "advent-of-code-template"
+version = "0.1.0"
+dependencies = [
+ "aoc-common-lib",
+]
+
+[[package]]
+name = "aoc-common-lib"
 version = "0.1.0"
