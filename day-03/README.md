@@ -4,6 +4,13 @@ https://adventofcode.com/2022/day/3
 
 ## Rucksack Reorganization
 
+### Test Input
+
+- [input_advent_example.txt](./input_advent_example.txt)
+- [input_advent_challenge.txt](./input_advent_challenge.txt)
+
+### Part 1
+
 One Elf has the important job of loading all of the rucksacks with supplies for the jungle journey. Unfortunately, that Elf didn't quite follow the packing instructions, and so a few items now need to be rearranged.
 
 Each rucksack has two large compartments. All items of a given type are meant to go into exactly one of the two compartments. The Elf that did the packing failed to follow this rule for exactly one item type per rucksack.
@@ -39,7 +46,13 @@ In the above example, the priority of the item type that appears in both compart
 
 Find the item type that appears in both compartments of each rucksack. What is the sum of the priorities of those item types
 
---- Part Two ---
+### Part 1 - Answers:
+| Input File                 | Expected Answer |
+| -------------------------- | --------------- |
+| input_advent_example.txt   |             157 |
+| input_advent_challenge.txt |            7737 |
+
+### Part 2
 
 As you finish identifying the misplaced items, the Elves come to you with another issue.
 
@@ -51,18 +64,28 @@ Additionally, nobody wrote down which item type corresponds to each group's badg
 
 Every set of three lines in your list corresponds to a single group, but each group can have a different badge item type. So, in the above example, the first group's rucksacks are the first three lines:
 
+```
 vJrwpWtwJgWrhcsFMMfFFhFp
 jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
 PmmdzqPrVvPwwTWBwg
+```
 
 And the second group's rucksacks are the next three lines:
 
+```
 wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
 ttgJtRGJQctTZtZT
 CrZsJsPPZsGzwwsLwLmpwMDw
+```
 
 In the first group, the only item type that appears in all three rucksacks is lowercase r; this must be their badges. In the second group, their badge item type must be Z.
 
 Priorities for these items must still be found to organize the sticker attachment efforts: here, they are 18 (r) for the first group and 52 (Z) for the second group. The sum of these is 70.
 
 Find the item type that corresponds to the badges of each three-Elf group. What is the sum of the priorities of those item types?
+
+### Part 2 - Answers:
+| Input File                 | Expected Answer |
+| -------------------------- | --------------- |
+| input_advent_example.txt   |              70 |
+| input_advent_challenge.txt |            2697 |

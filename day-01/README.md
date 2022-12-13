@@ -4,6 +4,13 @@ https://adventofcode.com/2022/day/1
 
 ## Calorie Counting
 
+### Test Input
+
+- [input_advent_example.txt](./input_advent_example.txt)
+- [input_advent_challenge.txt](./input_advent_challenge.txt)
+
+### Part 1
+
 The jungle must be too overgrown and difficult to navigate in vehicles or access from the air; the Elves' expedition traditionally goes on foot. As your boats approach land, the Elves begin taking inventory of their supplies. One important consideration is food - in particular, the number of Calories each Elf is carrying (your puzzle input).
 
 The Elves take turns writing down the number of Calories contained by the various meals, snacks, rations, etc. that they've brought with them, one item per line. Each Elf separates their own inventory from the previous Elf's inventory (if any) by a blank line.
@@ -39,8 +46,13 @@ In case the Elves get hungry and need extra snacks, they need to know which Elf 
 
 Find the Elf carrying the most Calories. How many total Calories is that Elf carrying?
 
+### Part 1 - Answers:
+| Input File                 | Expected Answer |
+| -------------------------- | --------------- |
+| input_advent_example.txt   |           24000 |
+| input_advent_challenge.txt |           75622 |
 
---- Part Two ---
+### Part 2
 
 By the time you calculate the answer to the Elves' question, they've already realized that the Elf carrying the most Calories of food might eventually run out of snacks.
 
@@ -50,3 +62,8 @@ In the example above, the top three Elves are the fourth Elf (with 24000 Calorie
 
 Find the top three Elves carrying the most Calories. How many Calories are those Elves carrying in total?
 
+### Part 2 - Answers:
+| Input File                 | Expected Answer |
+| -------------------------- | --------------- |
+| input_advent_example.txt   |           45000 |
+| input_advent_challenge.txt |          213159 |
