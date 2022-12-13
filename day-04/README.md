@@ -1,4 +1,4 @@
-# Adevent of Code - Day 4
+# Advent of Code - Day 4
 
 ## Camp Cleanup
 

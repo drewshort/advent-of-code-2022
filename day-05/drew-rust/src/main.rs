@@ -1,6 +1,3 @@
-/*
-Basic rust bin with runtime error and arg parsing
-*/
 use std::path::Path;
 use std::{env, error::Error};
 
