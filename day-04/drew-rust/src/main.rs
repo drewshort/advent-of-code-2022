@@ -1,3 +1,4 @@
+use std::cmp;
 use std::fmt::{self, Display};
 use std::path::Path;
 use std::{env, error::Error};
@@ -63,22 +64,16 @@ impl AssignmentOverlap {
     ) -> AssignmentOverlap {
         if left_assignment == right_assignment {
             Self::CompleteOverlap
-        } else if left_assignment.range_start <= right_assignment.range_start {
-            if left_assignment.range_end >= right_assignment.range_end {
-                Self::LeftContainsRight
-            } else if left_assignment.range_end >= right_assignment.range_start {
-                Self::Overlap
-            } else {
-                Self::NoOverlap
-            }
-        } else if right_assignment.range_end >= left_assignment.range_end {
-            if right_assignment.range_start <= left_assignment.range_start {
-                Self::RightContainsLeft
-            } else if right_assignment.range_start <= left_assignment.range_end {
-                Self::Overlap
-            } else {
-                Self::NoOverlap
-            }
+        } else if left_assignment.range_start <= right_assignment.range_start
+            && left_assignment.range_end >= right_assignment.range_end
+        {
+            Self::LeftContainsRight
+        } else if right_assignment.range_start <= left_assignment.range_start
+            && right_assignment.range_end >= left_assignment.range_end
+        {
+            Self::RightContainsLeft
+        } else if left_assignment.range_end >= right_assignment.range_start {
+            Self::Overlap
         } else {
             Self::NoOverlap
         }
@@ -113,8 +108,14 @@ impl AssignmentPair {
             Some(parts) => {
                 let left_assignment = SectionAssignment::parse(parts.0).unwrap();
                 let right_assignment = SectionAssignment::parse(parts.1).unwrap();
+
                 let assignment_overlap =
-                    AssignmentOverlap::determine_overlap(&left_assignment, &right_assignment);
+                    if left_assignment.range_start <= right_assignment.range_start {
+                        AssignmentOverlap::determine_overlap(&left_assignment, &right_assignment)
+                    } else {
+                        AssignmentOverlap::determine_overlap(&right_assignment, &left_assignment)
+                    };
+
                 Some(AssignmentPair {
                     left_assignment,
                     right_assignment,
@@ -185,9 +186,9 @@ fn main() -> Result<()> {
     let input_path = &args[1];
     let assignments = parse_assignments(input_path).unwrap();
 
-    // for assignment in assignments {
-    //     println!("{}", assignment);
-    // }
+    for assignment in assignments.iter() {
+        println!("{}", assignment);
+    }
 
     let overlapping_assignment_count = assignments
         .iter()
