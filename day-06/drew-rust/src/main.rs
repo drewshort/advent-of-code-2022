@@ -120,7 +120,15 @@ fn main() -> Result<()> {
     let input_path = &args[1];
     let buffer_width: usize = args.get(2).unwrap_or(&String::from("4")).parse::<usize>()?;
     let results = parse_message_stream(input_path, buffer_width);
-    println!("{:#?}", results);
+    println!(
+        "{}",
+        results
+            .unwrap()
+            .iter()
+            .map(|packet_start| format!("{}", packet_start))
+            .collect::<Vec<String>>()
+            .join("\n")
+    );
 
     Ok(())
 }
