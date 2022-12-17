@@ -63,11 +63,17 @@ impl CargoStack {
         self.stack.pop()
     }
 
-    fn remove_stack(&mut self, size: usize) -> Self {
+    fn remove_stack(&mut self, size: usize, collect_in_place: bool) -> Self {
         let mut cargo_stack: Vec<CargoCrate> = Vec::new();
         for _ in 0..size {
             match self.stack.pop() {
-                Some(cargo_crate) => cargo_stack.push(cargo_crate),
+                Some(cargo_crate) => {
+                    if collect_in_place {
+                        cargo_stack.insert(0, cargo_crate)
+                    } else {
+                        cargo_stack.push(cargo_crate)
+                    }
+                }
                 None => continue,
             }
         }
@@ -138,13 +144,14 @@ impl CargoBay {
         }
     }
 
-    fn apply(&mut self, move_command: MoveCommand) -> Result<bool> {
+    fn apply(&mut self, move_command: MoveCommand, move_stacks_together: bool) -> Result<bool> {
         let origin_cargo_stack = self.stacks.get_mut(move_command.origin);
         let moved_cargo_stack: CargoStack;
 
         match origin_cargo_stack {
             Some(origin_cargo_stack) => {
-                moved_cargo_stack = origin_cargo_stack.remove_stack(move_command.size)
+                moved_cargo_stack =
+                    origin_cargo_stack.remove_stack(move_command.size, move_stacks_together)
             }
             None => {
                 return Err(Box::new(RuntimeError::new(format!(
@@ -373,6 +380,11 @@ fn main() -> Result<()> {
         ))));
     }
     let input_path = &args[1];
+    let move_stacks_together = args
+        .get(2)
+        .unwrap_or(&String::from("false"))
+        .parse::<bool>()?;
+
     let results = parse_cargo_bay_and_move_commands(input_path)?;
     let mut cargo_bay = results.0;
     let move_commands = results.1;
@@ -380,7 +392,7 @@ fn main() -> Result<()> {
     println!("{}", &cargo_bay);
 
     for move_command in move_commands {
-        cargo_bay.apply(move_command)?;
+        cargo_bay.apply(move_command, move_stacks_together)?;
     }
 
     println!("{}", &cargo_bay);
@@ -393,6 +405,15 @@ fn main() -> Result<()> {
             .map(|cargo_crate| format!("{}", cargo_crate))
             .collect::<Vec<String>>()
             .join(" ")
+    );
+    println!(
+        "            {}",
+        cargo_bay
+            .top()
+            .iter()
+            .map(|cargo_crate| format!("{}", cargo_crate.id))
+            .collect::<Vec<String>>()
+            .join("")
     );
 
     Ok(())
