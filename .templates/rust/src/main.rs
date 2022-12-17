@@ -17,7 +17,16 @@ fn parse_spam(input_file_path: &str) -> Result<()> {
         return Err(Box::new(RuntimeError::new(error_message)));
     }
     let mut objs: Vec<Option<()>> = Vec::new();
-    if let Ok(lines) = read_lines(input_file) {}
+    if let Ok(lines) = read_lines(input_file) {
+        for line in lines {
+            match line {
+                Ok(line) => {
+                    line;
+                }
+                Err(err) => return Err(Box::new(err)),
+            }
+        }
+    }
     Ok(())
 }
 

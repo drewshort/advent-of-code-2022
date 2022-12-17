@@ -1,0 +1,9 @@
+cargo_crate = { "   " | ("[" ~ ASCII_ALPHA_UPPER ~ "]") }
+cargo_crate_row = { cargo_crate ~ (" " ~ cargo_crate)* }
+
+cargo_crate_stack = { ASCII_DIGIT+ }
+cargo_crate_stack_row = { " " ~ cargo_crate_stack ~ ( " "+ ~ cargo_crate_stack)* }
+
+move_command = { "move " ~ cargo_crate_stack ~ " from " ~ cargo_crate_stack ~ " to " ~ cargo_crate_stack }
+
+manifest_line = { cargo_crate_row | cargo_crate_stack_row | move_command }
