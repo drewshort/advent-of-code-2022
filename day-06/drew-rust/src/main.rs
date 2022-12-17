@@ -82,12 +82,12 @@ fn determine_start_of_packet(datastream: std::str::Chars, buffer_width: usize) -
     let mut parse_buffer: ParseBuffer<char> = ParseBuffer::new(buffer_width);
     let mut index: usize = 0;
     for character in datastream {
-        index += 1;
         if parse_buffer.is_start_of_packet(&character) {
             break;
         }
+        index += 1;
     }
-    index - 1
+    index
 }
 
 fn parse_message_stream(input_file_path: &str, buffer_width: usize) -> Result<Vec<usize>> {
