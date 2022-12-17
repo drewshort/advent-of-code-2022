@@ -66,7 +66,7 @@ impl CargoStack {
     fn remove_stack(&mut self, size: usize, collect_in_place: bool) -> Self {
         let mut cargo_stack: Vec<CargoCrate> = Vec::new();
         for _ in 0..size {
-            match self.stack.pop() {
+            match self.remove() {
                 Some(cargo_crate) => {
                     if collect_in_place {
                         cargo_stack.insert(0, cargo_crate)
