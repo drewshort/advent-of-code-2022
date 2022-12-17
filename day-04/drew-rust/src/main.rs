@@ -1,4 +1,3 @@
-use std::cmp;
 use std::fmt::{ self, Display };
 use std::path::Path;
 use std::{ env, error::Error };

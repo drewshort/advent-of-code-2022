@@ -40,6 +40,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "advent-day-6"
+version = "0.1.0"
+dependencies = [
+ "aoc-common-lib",
+]
+
+[[package]]
 name = "advent-of-code-template"
 version = "0.1.0"
 dependencies = [

@@ -2,7 +2,7 @@
 Basic rust bin with runtime error and arg parsing
 */
 use std::path::Path;
-use std::{env, error::Error};
+use std::{ env, error::Error };
 
 use aoc_common_lib::error::RuntimeError;
 use aoc_common_lib::utility::read_lines;
@@ -23,7 +23,9 @@ fn parse_spam(input_file_path: &str) -> Result<()> {
                 Ok(line) => {
                     line;
                 }
-                Err(err) => return Err(Box::new(err)),
+                Err(err) => {
+                    return Err(Box::new(err));
+                }
             }
         }
     }
@@ -33,12 +35,10 @@ fn parse_spam(input_file_path: &str) -> Result<()> {
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
-        return Err(Box::new(RuntimeError::new(String::from(
-            "Must provide input file path",
-        ))));
+        return Err(Box::new(RuntimeError::new(String::from("Must provide input file path"))));
     }
     let input_path = &args[1];
-    let results = parse_spam(&input_path);
+    let results = parse_spam(input_path);
 
     Ok(())
 }
