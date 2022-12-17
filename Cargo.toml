@@ -9,4 +9,5 @@ members = [
     "day-04/drew-rust",
     "day-05/drew-rust",
     "day-06/drew-rust",
+    "day-07/drew-rust",
 ]
