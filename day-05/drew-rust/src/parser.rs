@@ -54,7 +54,7 @@ fn parse_move_command(
         None => {
             return Err(Box::new(RuntimeError::new(String::from(
                 "unexpected missing pair",
-            ))))
+            ))));
         }
     }
 
@@ -65,7 +65,7 @@ fn parse_move_command(
         None => {
             return Err(Box::new(RuntimeError::new(String::from(
                 "unexpected missing pair",
-            ))))
+            ))));
         }
     }
 
@@ -76,7 +76,7 @@ fn parse_move_command(
         None => {
             return Err(Box::new(RuntimeError::new(String::from(
                 "unexpected missing pair",
-            ))))
+            ))));
         }
     }
 
@@ -119,20 +119,22 @@ pub fn parse_cargo_bay_and_move_commands(
                     let cargo_manifest_contents =
                         match CargoManifestParser::parse(Rule::manifest_line, &line) {
                             Ok(manifest_contents) => manifest_contents,
-                            Err(err) => return Err(Box::new(err)),
+                            Err(err) => {
+                                return Err(Box::new(err));
+                            }
                         };
 
                     for manifest_line in cargo_manifest_contents {
                         match manifest_line.as_rule() {
                             Rule::manifest_line => match parse_manifest_line(manifest_line)? {
                                 ManifestLine::CrateRow(crate_row) => {
-                                    cargo_crate_rows.push(crate_row)
+                                    cargo_crate_rows.push(crate_row);
                                 }
                                 ManifestLine::StackCount(stack_count) => {
-                                    cargo_crate_row_count = stack_count
+                                    cargo_crate_row_count = stack_count;
                                 }
                                 ManifestLine::MoveCommand(move_command) => {
-                                    move_commands.push(move_command)
+                                    move_commands.push(move_command);
                                 }
                             },
                             Rule::cargo_crate
@@ -143,7 +145,9 @@ pub fn parse_cargo_bay_and_move_commands(
                         }
                     }
                 }
-                Err(err) => return Err(Box::new(err)),
+                Err(err) => {
+                    return Err(Box::new(err));
+                }
             }
         }
     }

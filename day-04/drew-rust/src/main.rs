@@ -1,7 +1,7 @@
 use std::cmp;
-use std::fmt::{self, Display};
+use std::fmt::{ self, Display };
 use std::path::Path;
-use std::{env, error::Error};
+use std::{ env, error::Error };
 
 use aoc_common_lib::error::RuntimeError;
 use aoc_common_lib::utility::read_lines;
@@ -60,16 +60,18 @@ impl AssignmentOverlap {
     /// This method assumes that the ordering of the start values is from least to greatest for the left and right assignment inputs
     fn determine_overlap(
         left_assignment: &SectionAssignment,
-        right_assignment: &SectionAssignment,
+        right_assignment: &SectionAssignment
     ) -> AssignmentOverlap {
         if left_assignment == right_assignment {
             Self::CompleteOverlap
-        } else if left_assignment.range_start <= right_assignment.range_start
-            && left_assignment.range_end >= right_assignment.range_end
+        } else if
+            left_assignment.range_start <= right_assignment.range_start &&
+            left_assignment.range_end >= right_assignment.range_end
         {
             Self::LeftContainsRight
-        } else if right_assignment.range_start <= left_assignment.range_start
-            && right_assignment.range_end >= left_assignment.range_end
+        } else if
+            right_assignment.range_start <= left_assignment.range_start &&
+            right_assignment.range_end >= left_assignment.range_end
         {
             Self::RightContainsLeft
         } else if left_assignment.range_end >= right_assignment.range_start {
@@ -109,12 +111,11 @@ impl AssignmentPair {
                 let left_assignment = SectionAssignment::parse(parts.0).unwrap();
                 let right_assignment = SectionAssignment::parse(parts.1).unwrap();
 
-                let assignment_overlap =
-                    if left_assignment.range_start <= right_assignment.range_start {
-                        AssignmentOverlap::determine_overlap(&left_assignment, &right_assignment)
-                    } else {
-                        AssignmentOverlap::determine_overlap(&right_assignment, &left_assignment)
-                    };
+                let assignment_overlap = if left_assignment.range_start <= right_assignment.range_start {
+                    AssignmentOverlap::determine_overlap(&left_assignment, &right_assignment)
+                } else {
+                    AssignmentOverlap::determine_overlap(&right_assignment, &left_assignment)
+                };
 
                 Some(AssignmentPair {
                     left_assignment,
@@ -133,19 +134,16 @@ impl AssignmentPair {
     fn has_fully_contains(&self) -> bool {
         matches!(
             self.assignment_overlap,
-            AssignmentOverlap::LeftContainsRight
-                | AssignmentOverlap::RightContainsLeft
-                | AssignmentOverlap::CompleteOverlap
+            AssignmentOverlap::LeftContainsRight |
+                AssignmentOverlap::RightContainsLeft |
+                AssignmentOverlap::CompleteOverlap
         )
     }
 }
 
 impl Display for AssignmentPair {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_fmt(format_args!(
-            "{},{}  {}",
-            self.left_assignment, self.right_assignment, self.assignment_overlap
-        ))
+        f.write_fmt(format_args!("{},{}  {}", self.left_assignment, self.right_assignment, self.assignment_overlap))
     }
 }
 
@@ -168,7 +166,9 @@ fn parse_assignments(input_file_path: &str) -> Result<Vec<AssignmentPair>> {
                         None => (),
                     }
                 }
-                Err(err) => return Err(Box::new(err)),
+                Err(err) => {
+                    return Err(Box::new(err));
+                }
             }
         }
     }
@@ -179,9 +179,7 @@ fn parse_assignments(input_file_path: &str) -> Result<Vec<AssignmentPair>> {
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
-        return Err(Box::new(RuntimeError::new(String::from(
-            "Must provide input file path",
-        ))));
+        return Err(Box::new(RuntimeError::new(String::from("Must provide input file path"))));
     }
     let input_path = &args[1];
     let assignments = parse_assignments(input_path).unwrap();
@@ -202,10 +200,7 @@ fn main() -> Result<()> {
         .filter(|assignment| assignment.has_fully_contains())
         .count();
 
-    println!(
-        "Fully contains assignments: {}",
-        fully_contains_assignment_count
-    );
+    println!("Fully contains assignments: {}", fully_contains_assignment_count);
 
     Ok(())
 }

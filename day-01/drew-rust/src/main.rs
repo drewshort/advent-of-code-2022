@@ -1,4 +1,4 @@
-use std::{env, error::Error, path::Path};
+use std::{ env, error::Error, path::Path };
 
 use aoc_common_lib::error::RuntimeError;
 use aoc_common_lib::utility::read_lines;
@@ -62,9 +62,7 @@ fn parse_elves(input_file_path: &str) -> Result<Vec<Elf>> {
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
-        return Err(Box::new(RuntimeError::new(String::from(
-            "Must provide input file path",
-        ))));
+        return Err(Box::new(RuntimeError::new(String::from("Must provide input file path"))));
     }
     let input_path = &args[1];
     let mut elves = parse_elves(input_path)?;
@@ -72,13 +70,13 @@ fn main() -> Result<()> {
     elves.sort_by(|a, b| b.calories.cmp(&a.calories));
 
     let top_3_elves = &elves[0..3];
-    println!(
-        "{} Calories carried by elf {}",
-        top_3_elves[0].calories, top_3_elves[0].id
-    );
+    println!("{} Calories carried by elf {}", top_3_elves[0].calories, top_3_elves[0].id);
     println!(
         "{} Calories carried by the top 3 elves",
-        top_3_elves.iter().map(|&elf| elf.calories).sum::<u32>()
+        top_3_elves
+            .iter()
+            .map(|&elf| elf.calories)
+            .sum::<u32>()
     );
 
     Ok(())

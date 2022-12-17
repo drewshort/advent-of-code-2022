@@ -1,4 +1,4 @@
-use std::{error::Error, fmt::Display};
+use std::{ error::Error, fmt::Display };
 
 use aoc_common_lib::error::RuntimeError;
 
@@ -47,7 +47,7 @@ impl CargoStack {
 
     fn add_stack(&mut self, cargo_stack: CargoStack) {
         for cargo_crate in cargo_stack.stack {
-            self.add(&Some(cargo_crate))
+            self.add(&Some(cargo_crate));
         }
     }
 
@@ -61,12 +61,14 @@ impl CargoStack {
             match self.remove() {
                 Some(cargo_crate) => {
                     if collect_in_place {
-                        cargo_stack.insert(0, cargo_crate)
+                        cargo_stack.insert(0, cargo_crate);
                     } else {
-                        cargo_stack.push(cargo_crate)
+                        cargo_stack.push(cargo_crate);
                     }
                 }
-                None => continue,
+                None => {
+                    continue;
+                }
             }
         }
         CargoStack {
@@ -90,14 +92,16 @@ impl CargoStack {
 
 impl Display for CargoStack {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_fmt(format_args!(
-            "{}",
-            self.stack
-                .iter()
-                .map(|cargo_crate| format!("{}", cargo_crate))
-                .collect::<Vec<String>>()
-                .join(" -> ")
-        ))
+        f.write_fmt(
+            format_args!(
+                "{}",
+                self.stack
+                    .iter()
+                    .map(|cargo_crate| format!("{}", cargo_crate))
+                    .collect::<Vec<String>>()
+                    .join(" -> ")
+            )
+        )
     }
 }
 
@@ -107,10 +111,7 @@ pub struct CargoBay {
 }
 
 impl CargoBay {
-    pub fn new(
-        cargo_crate_row_count: usize,
-        cargo_crate_rows: Vec<Vec<Option<CargoCrate>>>,
-    ) -> CargoBay {
+    pub fn new(cargo_crate_row_count: usize, cargo_crate_rows: Vec<Vec<Option<CargoCrate>>>) -> CargoBay {
         let mut cargo_bay_stacks: Vec<CargoStack> = Vec::new();
         (0..cargo_crate_row_count).for_each(|index| {
             cargo_bay_stacks.push(CargoStack {
@@ -124,7 +125,9 @@ impl CargoBay {
             for index in 0..cargo_crate_row_count {
                 let cargo_crate = match cargo_crates.next() {
                     Some(cargo_crate) => cargo_crate,
-                    None => continue,
+                    None => {
+                        continue;
+                    }
                 };
                 let cargo_bay_stack = cargo_bay_stacks.get_mut(index).unwrap();
                 cargo_bay_stack.add(cargo_crate);
@@ -136,24 +139,16 @@ impl CargoBay {
         }
     }
 
-    pub fn apply(
-        &mut self,
-        move_command: &MoveCommand,
-        move_stacks_together: bool,
-    ) -> Result<bool> {
+    pub fn apply(&mut self, move_command: &MoveCommand, move_stacks_together: bool) -> Result<bool> {
         let origin_cargo_stack = self.stacks.get_mut(move_command.origin);
         let moved_cargo_stack: CargoStack;
 
         match origin_cargo_stack {
             Some(origin_cargo_stack) => {
-                moved_cargo_stack =
-                    origin_cargo_stack.remove_stack(move_command.size, move_stacks_together)
+                moved_cargo_stack = origin_cargo_stack.remove_stack(move_command.size, move_stacks_together);
             }
             None => {
-                return Err(Box::new(RuntimeError::new(format!(
-                    "Error applying move command: {}",
-                    move_command
-                ))))
+                return Err(Box::new(RuntimeError::new(format!("Error applying move command: {}", move_command))));
             }
         }
 
@@ -162,12 +157,9 @@ impl CargoBay {
                 destination_cargo_stack.add_stack(moved_cargo_stack);
             }
             None => {
-                return Err(Box::new(RuntimeError::new(format!(
-                    "Error applying move command: {}",
-                    move_command
-                ))))
+                return Err(Box::new(RuntimeError::new(format!("Error applying move command: {}", move_command))));
             }
-        };
+        }
 
         Ok(true)
     }
@@ -182,8 +174,7 @@ impl CargoBay {
 
 impl Display for CargoBay {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let max_height = self
-            .stacks
+        let max_height = self.stacks
             .iter()
             .map(|stack| stack.height())
             .max()
@@ -229,12 +220,7 @@ impl MoveCommand {
 
 impl Display for MoveCommand {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_fmt(format_args!(
-            "move {} from {} to {}",
-            self.size,
-            self.origin + 1,
-            self.destination + 1
-        ))
+        f.write_fmt(format_args!("move {} from {} to {}", self.size, self.origin + 1, self.destination + 1))
     }
 }
 

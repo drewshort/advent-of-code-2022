@@ -1,15 +1,7 @@
 /*
 Basic rust bin with runtime error and arg parsing
 */
-use std::{
-    collections::BTreeMap,
-    env,
-    error::Error,
-    fmt::{self, Display},
-    hash::Hash,
-    iter,
-    path::Path,
-};
+use std::{ collections::BTreeMap, env, error::Error, fmt::{ self, Display }, hash::Hash, iter, path::Path };
 
 use aoc_common_lib::error::RuntimeError;
 use aoc_common_lib::utility::read_lines;
@@ -41,12 +33,7 @@ impl Eq for SupplyItem {
 
 impl Display for SupplyItem {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_fmt(format_args!(
-            "{} ({}: {})",
-            self.get_priority(),
-            self.id,
-            self.count
-        ))
+        f.write_fmt(format_args!("{} ({}: {})", self.get_priority(), self.id, self.count))
     }
 }
 
@@ -68,9 +55,9 @@ impl SupplyItem {
 fn determine_priority(id: &char) -> u8 {
     match id {
         // a = 97, z = 122 => 1..=26
-        'a'..='z' => *id as u8 - 96,
+        'a'..='z' => (*id as u8) - 96,
         // A = 65, Z = 90 => 27..=52
-        'A'..='Z' => *id as u8 - 38,
+        'A'..='Z' => (*id as u8) - 38,
         _ => 0u8,
     }
 }
@@ -106,14 +93,12 @@ impl RucksackCompartment {
     }
 
     fn common_items_with(&self, other: &Self) -> Self {
-        let common_items: Vec<SupplyItem> = self
-            .contents
+        let common_items: Vec<SupplyItem> = self.contents
             .keys()
             .filter(|id| other.contents.contains_key(*id))
             .map(|id| SupplyItem {
                 id: self.contents.get(id).unwrap().id,
-                count: (self.contents.get(id).unwrap().count
-                    + other.contents.get(id).unwrap().count),
+                count: self.contents.get(id).unwrap().count + other.contents.get(id).unwrap().count,
             })
             .collect();
 
@@ -122,7 +107,7 @@ impl RucksackCompartment {
                 .iter()
                 .map(|i| iter::repeat(i.id).take(i.count).collect::<String>())
                 .reduce(|this, other| format!("{}{}", this, other))
-                .unwrap(),
+                .unwrap()
         )
     }
 }
@@ -138,33 +123,24 @@ impl Rucksack {
     fn new(rucksack_contents: &str) -> Self {
         Rucksack {
             size: rucksack_contents.len(),
-            compartment_1: RucksackCompartment::new(
-                &rucksack_contents[0..(rucksack_contents.len() / 2)],
-            ),
-            compartment_2: RucksackCompartment::new(
-                &rucksack_contents[(rucksack_contents.len() / 2)..],
-            ),
+            compartment_1: RucksackCompartment::new(&rucksack_contents[0..rucksack_contents.len() / 2]),
+            compartment_2: RucksackCompartment::new(&rucksack_contents[rucksack_contents.len() / 2..]),
         }
     }
 
     fn unpack(&self) -> RucksackCompartment {
-        let merged_raw_contents = format!(
-            "{}{}",
-            self.compartment_1.raw_contents, self.compartment_2.raw_contents
-        );
+        let merged_raw_contents = format!("{}{}", self.compartment_1.raw_contents, self.compartment_2.raw_contents);
         RucksackCompartment::new(&merged_raw_contents)
     }
 
     fn get_common_items(&self) -> Result<Vec<SupplyItem>> {
-        let common_items: Vec<SupplyItem> = self
-            .compartment_1
-            .contents
+        let common_items: Vec<SupplyItem> = self.compartment_1.contents
             .keys()
             .filter(|id| self.compartment_2.contents.contains_key(*id))
             .map(|id| SupplyItem {
                 id: self.compartment_1.contents.get(id).unwrap().id,
-                count: (self.compartment_1.contents.get(id).unwrap().count
-                    + self.compartment_2.contents.get(id).unwrap().count),
+                count: self.compartment_1.contents.get(id).unwrap().count +
+                self.compartment_2.contents.get(id).unwrap().count,
             })
             .collect();
 
@@ -189,22 +165,25 @@ impl ElfGroup {
     }
 
     fn get_common_items(&self) -> Result<Vec<SupplyItem>> {
-        let unpacked_rucksacks: Vec<RucksackCompartment> =
-            self.rucksacks.iter().map(|r| r.unpack()).collect();
+        let unpacked_rucksacks: Vec<RucksackCompartment> = self.rucksacks
+            .iter()
+            .map(|r| r.unpack())
+            .collect();
 
         let mut unpacked_common_items: RucksackCompartment = unpacked_rucksacks
             .get(0)
             .unwrap()
             .common_items_with(unpacked_rucksacks.get(1).unwrap());
         for unpacked_rucksack in unpacked_rucksacks[2..].iter() {
-            unpacked_common_items = unpacked_common_items.common_items_with(unpacked_rucksack)
+            unpacked_common_items = unpacked_common_items.common_items_with(unpacked_rucksack);
         }
 
-        Ok(unpacked_common_items
-            .contents
-            .iter()
-            .map(|entry| entry.1.to_owned())
-            .collect())
+        Ok(
+            unpacked_common_items.contents
+                .iter()
+                .map(|entry| entry.1.to_owned())
+                .collect()
+        )
     }
 
     fn size(&self) -> usize {
@@ -228,8 +207,10 @@ fn parse_elf_groups(input_file_path: &str, group_size: usize) -> Result<Vec<ElfG
             }
             match line {
                 Ok(line) => current_elf_group.add(Rucksack::new(&line)),
-                Err(err) => return Err(Box::new(err)),
-            };
+                Err(err) => {
+                    return Err(Box::new(err));
+                }
+            }
         }
         // Capture the last group
         elf_groups.push(current_elf_group);
@@ -241,9 +222,7 @@ fn parse_elf_groups(input_file_path: &str, group_size: usize) -> Result<Vec<ElfG
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
-        return Err(Box::new(RuntimeError::new(String::from(
-            "Must provide input file path",
-        ))));
+        return Err(Box::new(RuntimeError::new(String::from("Must provide input file path"))));
     }
     let input_path = &args[1];
     let elf_groups = parse_elf_groups(input_path, 3)?;

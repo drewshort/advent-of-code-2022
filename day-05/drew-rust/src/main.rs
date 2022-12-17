@@ -2,11 +2,9 @@ extern crate pest;
 #[macro_use]
 extern crate pest_derive;
 
-use std::{env, error::Error};
-
-use aoc_common_lib::error::RuntimeError;
-
 use crate::parser::parse_cargo_bay_and_move_commands;
+use aoc_common_lib::error::RuntimeError;
+use std::{env, error::Error};
 
 mod model;
 mod parser;
