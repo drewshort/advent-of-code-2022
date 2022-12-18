@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 aoc-common-lib = { path = "../../lib/rust-aoc-common-lib" }
+pest = "2.5.1"
+pest_derive = "2.5.1"
+r3bl_rs_utils = "0.9.3"

@@ -1,0 +1,15 @@
+
+command = { ASCII_ALPHA+ }
+command_arg = { ASCII_ALPHA+ }
+command_line = { "$" ~ command ~ (command_arg)* }
+
+directory_name = { ASCII_ALPHA+ }
+directory = { "dir" ~ directory_name }
+file_size = { ASCII_DIGIT+ }
+file_name = { ASCII_ALPHA+ }
+file = { file_size ~ file_name }
+result_line = { directory | file }
+
+output_line = { command_line | result_line }
+
+WHITESPACE = _{ " " }
