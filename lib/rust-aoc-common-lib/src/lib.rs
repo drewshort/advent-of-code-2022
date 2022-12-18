@@ -1,4 +1,6 @@
+pub mod arena;
 pub mod error;
+pub mod tree;
 pub mod utility;
 
 pub fn add(left: usize, right: usize) -> usize {
